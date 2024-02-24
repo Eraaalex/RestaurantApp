@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 @Repository
@@ -50,5 +51,11 @@ public class LocalMemoryDishDAO {
         if (dish != null){
             dishes.remove(dish);
         }
+    }
+
+    public Dish findById(UUID dishId) {
+        return dishes.stream().filter(dish -> dish.getId().equals(dishId))
+                .findFirst()
+                .orElse(null);
     }
 }

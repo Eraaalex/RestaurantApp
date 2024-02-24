@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Primary
@@ -41,5 +42,10 @@ public class DishServiceImpl implements DishService {
     @Override
     public void deleteDish(String name) {
         repository.deleteByName(name);
+    }
+
+    @Override
+    public Dish findById(UUID dishId) {
+        return repository.findById(dishId).orElse(null);
     }
 }

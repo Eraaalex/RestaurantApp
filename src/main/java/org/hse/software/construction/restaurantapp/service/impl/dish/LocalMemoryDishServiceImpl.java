@@ -8,6 +8,7 @@ import org.hse.software.construction.restaurantapp.service.DishService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -38,5 +39,10 @@ public class LocalMemoryDishServiceImpl implements DishService {
     @Override
     public void deleteDish(String name) {
         repository.deleteDish(name);
+    }
+
+    @Override
+    public Dish findById(UUID dishId) {
+        return repository.findById(dishId);
     }
 }

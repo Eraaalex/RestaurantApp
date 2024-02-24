@@ -4,34 +4,50 @@ package org.hse.software.construction.restaurantapp.controller;
 import lombok.AllArgsConstructor;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Human;
+import org.hse.software.construction.restaurantapp.model.Order;
 import org.hse.software.construction.restaurantapp.service.DishService;
+import org.hse.software.construction.restaurantapp.service.OrderService;
 import org.hse.software.construction.restaurantapp.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/dishes")
+@RequestMapping("")
 @AllArgsConstructor
 public class DishController {
     private final DishService dishService;
-
-
-    @GetMapping("/welcome")
-    public String welcome() {
-        return "WELCOME!";
+    private final OrderService orderService;
+    @GetMapping("/menu")
+    public ModelAndView menu(Model model) {
+        model.addAttribute("products", dishService.findAllDish());
+        return new ModelAndView("menu");
     }
 
+
+    @PostMapping("/save-order")
+    public ModelAndView saveOrder(@ModelAttribute("order") Order order) {
+        orderService.saveOrder(order);
+        return new ModelAndView("redirect:/api/v1/menu");
+    }
+
+
     @GetMapping("/all-dishes")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Dish> findAllDishes() {
         return dishService.findAllDish();
     }
 
 
-    @PostMapping("/save-dish")//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Dish saveDish(@RequestBody Dish dish) {
-        return dishService.saveDish(dish);
+    @PostMapping("/new-dish")//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ModelAndView saveDish(@RequestBody Dish dish) {
+        dishService.saveDish(dish);
+        return new ModelAndView("redirect:/menu");
     }
+
 
     @GetMapping("/{name}")
     public Dish findByName(@PathVariable String name) {
@@ -54,6 +70,17 @@ public class DishController {
     public String addUser(@RequestBody Human user) {
         service.addUser(user);
         return "User is saved";
+    }
+
+
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
+    }
+
+    @ModelAttribute(name = "dish")
+    public Dish dish() {
+        return new Dish();
     }
 
 }
