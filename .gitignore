@@ -41,4 +41,11 @@ src/main/java/org/hse/software/construction/restaurantapp/controller/UserControl
 
 README.md
 
+src/main/java/org/hse/software/construction/restaurantapp/CookingService.java
+
+
 src/main/resources/templates/huinya
+
+Dockerfile
+
+docker-compose.yml

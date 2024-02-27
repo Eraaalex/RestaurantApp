@@ -8,7 +8,6 @@ import org.hse.software.construction.restaurantapp.service.OrderHandler;
 import org.hse.software.construction.restaurantapp.service.DishService;
 import org.hse.software.construction.restaurantapp.service.OrderService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,28 +36,26 @@ public class PreOrderController {
     }
 
     @GetMapping
-    public ModelAndView showDesignForm() {
+    public ModelAndView showDesignForm(String message) {
         List<Dish> dishes = dishService.findAllDish();
         ModelAndView modelAndView = new ModelAndView("design");
+        modelAndView.addObject("message", message);
         modelAndView.addObject("dishes", dishes);
         return modelAndView;
-
     }
 
     @PostMapping
     public ModelAndView processPreOrder(@Valid Order order, Errors errors) {
         if (errors.hasErrors()) {
-            return showDesignForm();
+            return showDesignForm("Your order was not accepted");
         }
         double totalCost = orderHandler.checkOrder(order.getSelectedDishes());
         if (totalCost == 0.0) {
-            return showDesignForm();
+            return showDesignForm("Your order was not accepted");
         }
         order.setCost(totalCost);
 
-
         Order savedOrder=orderService.saveOrder(order);
-        return new ModelAndView("redirect:/order/details/" + savedOrder.getId()); // Redirect to order details page with order ID
-
+        return new ModelAndView("redirect:/order/details/" + savedOrder.getId());
     }
 }

@@ -25,4 +25,7 @@ public class Dish {
     @Version
     private Long version;
 
+    private Integer time; // time to cook
+
+
 }

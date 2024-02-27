@@ -8,7 +8,7 @@
 <h1>Menu</h1><hr>
 <#list products as product>
     <div>
-        <p><b>${product.name}</b> ${product.price} $$$ |  Поторопитесь, осталось всего: ${product.amount} штук  </div>
+        <p><b>${product.name}</b> ${product.price} $$$ |  Be ready, in stock only: ${product.amount} pieces  </div>
     <hr>
 </#list>
 

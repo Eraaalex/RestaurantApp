@@ -3,44 +3,28 @@ package org.hse.software.construction.restaurantapp.controller;
 
 import lombok.AllArgsConstructor;
 import org.hse.software.construction.restaurantapp.model.Dish;
-import org.hse.software.construction.restaurantapp.model.Human;
-import org.hse.software.construction.restaurantapp.model.Order;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.OrderService;
-import org.hse.software.construction.restaurantapp.service.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("")
+@Controller
+@RequestMapping("/dishes")
 @AllArgsConstructor
 public class DishController {
-    private final DishService dishService;
-    private final OrderService orderService;
-    @GetMapping("/menu")
-    public ModelAndView menu(Model model) {
-        model.addAttribute("products", dishService.findAllDish());
-        return new ModelAndView("menu");
-    }
-
-
-    @PostMapping("/save-order")
-    public ModelAndView saveOrder(@ModelAttribute("order") Order order) {
-        orderService.saveOrder(order);
-        return new ModelAndView("redirect:/api/v1/menu");
-    }
-
-
+    DishService dishService;
     @GetMapping("/all-dishes")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Dish> findAllDishes() {
         return dishService.findAllDish();
     }
-
 
     @PostMapping("/new-dish")//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView saveDish(@RequestBody Dish dish) {
@@ -48,39 +32,15 @@ public class DishController {
         return new ModelAndView("redirect:/menu");
     }
 
+    @PostMapping("/add-dish")
+    public ModelAndView addDish(@Valid Dish dish, Errors errors){
 
-    @GetMapping("/{name}")
-    public Dish findByName(@PathVariable String name) {
-        return dishService.findByName(name);
-    }
+        if (errors.hasErrors()) {
+//            return showErrorForm("Your dish changes was not accepted");
 
-    @PutMapping("/update-dish")//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public Dish updateDish(@RequestBody Dish dish) {
-        return dishService.updateDish(dish);
-    }
-
-    @DeleteMapping("/delete_dish/{name}")//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void deleteDish(@PathVariable String name) {
-        dishService.deleteDish(name);
-    }
-
-    private final UserService service;
-
-    @PostMapping("/new-user")
-    public String addUser(@RequestBody Human user) {
-        service.addUser(user);
-        return "User is saved";
-    }
-
-
-    @ModelAttribute(name = "order")
-    public Order order() {
-        return new Order();
-    }
-
-    @ModelAttribute(name = "dish")
-    public Dish dish() {
-        return new Dish();
+        }
+        dishService.saveDish(dish);
+        return new ModelAndView("redirect:/menu");
     }
 
 }

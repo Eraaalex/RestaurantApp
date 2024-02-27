@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns= "http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns= "http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Make order</title>
@@ -10,8 +10,8 @@
     <hr>
     <div th:each="dish : ${dishes}">
         Amount:
-        <input type="number" th:field="*{selectedDishes[__${dish.id}__]}" min="0" >
-        <span th:text="${dish.name}"></span> <span th:text="${dish.price} + '$'"></span>
+        <input type="number" th:field="*{selectedDishes[__${dish.id}__]}" min="0" th:max = "${dish.amount}">
+        <span th:text="${dish.name}"></span> <span th:text="${dish.price} + '$'"></span> <span th:text="${dish.amount} + 'pieces'"></span>
         <br/> <hr>
     </div>
     <button type="submit">Submit Order</button>

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,7 +37,17 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish updateDish(Dish dish) {
-        return repository.save(dish);
+        Optional<Dish> existingDish = repository.findById(dish.getId());
+        if (existingDish.isPresent()) {
+            Dish updatedDish = existingDish.get();
+            // Update fields
+            updatedDish.setName(dish.getName());
+            updatedDish.setPrice(dish.getPrice());
+            updatedDish.setAmount(dish.getAmount());
+            // Save the updated entity
+            return repository.save(updatedDish);
+        }
+        return null;
     }
 
     @Override

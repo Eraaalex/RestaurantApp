@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
-@Entity
+//@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -24,9 +24,9 @@ public class Order {
     @NotNull
     @Size(min = 1, message = "You must choose at least 1 dish")
     @ElementCollection
-    @CollectionTable(name = "order_selected_dishes", joinColumns = @JoinColumn(name = "order_id"))
-    @MapKeyColumn(name = "dish_id")
-    @Column(name = "amount")
+//    @CollectionTable(name = "order_selected_dishes", joinColumns = @JoinColumn(name = "order_id"))
+//    @MapKeyColumn(name = "dish_id")
+//    @Column(name = "amount")
     private Map<UUID, Integer> selectedDishes = new HashMap<>();
 
     @Transient

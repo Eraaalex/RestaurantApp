@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h2 th:text="'Hello ' +${admin.name}"></h2>
+
+<form method="POST" th:action="@{/dishes/add-dish}" th:object="${dish}">
+    <h3>Add new dish</h3>
+    <hr>
+    <div>
+        <label>Dish name</label><input type="text" th:field="*{name}">
+        <br/>
+
+        <label>Dish price</label><input type="number" th:field="*{price}" min="0">
+        <br/>
+
+        <label>Dish current quantity in stock</label><input type="number" th:field="*{amount}" min="0">
+        <br/>
+        <label>Dish time to cook in minutes</label><input type="number" th:field="*{time}" min="0">
+        <br/>
+
+    </div>
+    <button type="submit">Add Dish!</button>
+</form>
+<hr>
+
+
+<!--<form method="POST" th:action="@{/update-dish}" th:object="${order}">-->
+<!--    <h3>Change dish info</h3>-->
+<!--    <hr>-->
+<!--    <select name="dishId">-->
+<!--        <option th:each="dish : ${dishes}" th:value="${dish.id}" th:text="${dish.name}"></option>-->
+<!--    </select>-->
+<!--    <input type="text" name="new_name" value="">-->
+<!--    <input type="number" name="quantity" min="0" value="0">-->
+<!--    <input type="number" name="price" min="0" value="0">-->
+<!--    <input type="number" name="time" min="0" value="0">-->
+<!--    <input type="hidden" name="orderId" th:value="${dish.id}">-->
+<!--    <button type="submit">Add to Order</button>-->
+
+<!--</form>-->
+
+
+</body>
+</html>
