@@ -15,7 +15,6 @@ public class Human {
     private UUID id;
     @Column(unique = true)
     private String name;
-    private String email;
     private String password;
-    private String roles;
+    private String roles = "ROLE_USER";
 }

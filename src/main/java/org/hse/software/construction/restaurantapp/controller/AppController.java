@@ -28,13 +28,6 @@ public class AppController {
     }
 
 
-    @PostMapping("/save-order")
-    public ModelAndView saveOrder(@ModelAttribute("order") Order order) {
-        orderService.saveOrder(order);
-        return new ModelAndView("redirect:/menu");
-    }
-
-
 
 
 
@@ -46,9 +39,10 @@ public class AppController {
     }
 
     @GetMapping("/admin")
-    public ModelAndView showAdminMainForm(Model model){
-        model.addAttribute("admin", new Human());
-        model.addAttribute("dishes", dishService.findAllDish());
+    public ModelAndView showAdminMainForm(){
+        ModelAndView model = new ModelAndView();
+        model.addObject("admin", new Human());
+        model.addObject("dishes", dishService.findAllDish());
         return new ModelAndView("admin-main");
 
     }

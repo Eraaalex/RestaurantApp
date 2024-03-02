@@ -58,4 +58,10 @@ public class PreOrderController {
         Order savedOrder=orderService.saveOrder(order);
         return new ModelAndView("redirect:/order/details/" + savedOrder.getId());
     }
+
+    @PostMapping("/save-order")
+    public ModelAndView saveOrder(@ModelAttribute("order") Order order) {
+        orderService.saveOrder(order);
+        return new ModelAndView("redirect:/menu");
+    }
 }

@@ -1,14 +1,15 @@
 server:
-  port: 8081
+  address: 0.0.0.0
+  port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/restaurant_app_db
+    url: jdbc:postgresql://db:5432/restaurant_app_db
     username: postgres
     password: eralex
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
