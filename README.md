@@ -7,7 +7,6 @@
 ```git
 git clone https://github.com/Eraaalex/RestaurantApp.git
 ```
- `RestaurantAppApplication`.
 
 Or you can paste the following link (https://github.com/Eraaalex/RestaurantApp.git) into your IntelJ IDEA 
 by clicking File -> New -> Project from Version Control.... Then paste the link and click Clone.
