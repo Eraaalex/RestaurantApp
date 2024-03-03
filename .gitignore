@@ -39,7 +39,6 @@ out/
 ### Not finished yet ###
 src/main/java/org/hse/software/construction/restaurantapp/controller/UserController.java
 
-README.md
 init.sql
 deploy.sh
 
