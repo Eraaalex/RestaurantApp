@@ -40,8 +40,10 @@ out/
 src/main/java/org/hse/software/construction/restaurantapp/controller/UserController.java
 
 README.md
+init.sql
+deploy.sh
 
-src/main/java/org/hse/software/construction/restaurantapp/CookingService.java
+src/main/java/org/hse/software/construction/restaurantapp/CookingService_2.java
 
 
 src/main/resources/templates/huinya

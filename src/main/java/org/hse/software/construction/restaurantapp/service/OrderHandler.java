@@ -29,13 +29,13 @@ public class OrderHandler {
                 return checkOrderInternal(selectedDishes);
             } catch (OptimisticLockException e) {
                 retryCount++;
-                log.info("OptimisticLockException");
+                log.info("[checkOrder] OptimisticLockException!");
             } catch (RuntimeException e) {
                 log.info("Exception");
                 return 0.0;
             }
         }
-        log.info("WRONG");
+        log.info("[checkOrder] ERROR total cost is 0.0");
         return 0.0;
     }
 
@@ -76,10 +76,12 @@ public class OrderHandler {
     private void attemptToAddDishesToOrder( UUID dishId, int quantity) {
         Dish dish = dishService.findById(dishId);
         if (quantity > dish.getAmount()) {
-            throw new IllegalArgumentException("Insufficient dish quantity available");
+            log.info("Insufficient dish quantity available");
+            return;
         }
 
         dish.setAmount(dish.getAmount() - quantity);
         dishService.updateDish(dish);
     }
+
 }

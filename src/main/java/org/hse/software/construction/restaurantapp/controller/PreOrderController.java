@@ -2,6 +2,7 @@ package org.hse.software.construction.restaurantapp.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hse.software.construction.restaurantapp.CookingService;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Order;
 import org.hse.software.construction.restaurantapp.service.OrderHandler;
@@ -24,6 +25,7 @@ public class PreOrderController {
     private final DishService dishService;
     private final OrderService orderService;
     private final OrderHandler orderHandler;
+    private final CookingService cookingService;
 
     @ModelAttribute(name = "order")
     public Order order() {
@@ -56,6 +58,7 @@ public class PreOrderController {
         order.setCost(totalCost);
 
         Order savedOrder=orderService.saveOrder(order);
+        cookingService.processOrder(order);
         return new ModelAndView("redirect:/order/details/" + savedOrder.getId());
     }
 

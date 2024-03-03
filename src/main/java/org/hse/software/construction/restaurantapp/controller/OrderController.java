@@ -4,6 +4,7 @@ package org.hse.software.construction.restaurantapp.controller;
 import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hse.software.construction.restaurantapp.CookingService;
 import org.hse.software.construction.restaurantapp.DishConverter;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Order;
@@ -31,6 +32,7 @@ public class OrderController {
     private OrderService orderService;
     private DishConverter dishConverter;
     private OrderHandler orderHandler;
+    private final CookingService cookingService;
 
     @GetMapping("/details/{orderId}")
     public ModelAndView showOrderForm(@PathVariable UUID orderId, Model model) {
@@ -50,25 +52,19 @@ public class OrderController {
         sessionStatus.setComplete();
         return new ModelAndView("redirect:/order");
     }
-
-    @PostMapping("/add-dish")
-    public String addDishToOrder(@RequestParam UUID orderId, @RequestParam UUID dishId, @RequestParam int quantity) {
-
+    @PostMapping("{orderId}/add-dish")
+    public String addDishToOrder(@PathVariable UUID orderId, @RequestParam UUID dishId, @RequestParam int quantity) {
         Order currentOrder = orderService.findById(orderId);
         Dish dish = dishService.findById(dishId);
 
         if (orderHandler.checkToAddDish(dishId, quantity)) {
-            currentOrder.addDish(dish.getId(), quantity, dish.getPrice());
-            orderService.updateOrder(currentOrder);
+            cookingService.addDishToOrder(orderId, dishId, quantity);
+            return "redirect:/order/details/" + currentOrder.getId();
         } else {
             log.info("Dish is not available");
-            
+            return "redirect:/errorPage"; // Redirect to an error page or handle the error appropriately
         }
-
-        return "redirect:/order/details/" + currentOrder.getId();
     }
-
-
 
 
 

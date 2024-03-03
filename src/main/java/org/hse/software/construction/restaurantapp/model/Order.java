@@ -5,9 +5,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hse.software.construction.restaurantapp.service.DishService;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -50,5 +53,10 @@ public class Order {
     }
     @Transient
     Status status = Status.ACCEPTED;
+    @Transient
+    private LocalDateTime startTime;
+    @Transient
+    private Duration estimatedCookingTime;
+
 
 }

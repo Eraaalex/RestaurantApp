@@ -19,7 +19,7 @@
 </ul>
 
 <h3>Add Dish to Order:</h3>
-<form method="post" th:action="@{/order/add-dish}">
+<form method="post" th:action="@{/order/{orderId}/add-dish(orderId=${order.id})}">
     <select name="dishId">
         <option th:each="dish : ${dishes}" th:value="${dish.id}" th:text="${dish.name}"></option>
     </select>
@@ -27,6 +27,8 @@
     <input type="hidden" name="orderId" th:value="${order.id}">
     <button type="submit">Add to Order</button>
 </form>
+
+<!--<form method="post" th:action="@{/order/add-dish}">-->
 
 </body>
 </html>
