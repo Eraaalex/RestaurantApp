@@ -19,17 +19,12 @@ import org.springframework.web.servlet.ModelAndView;
 @AllArgsConstructor
 public class AppController {
     private final DishService dishService;
-    private final OrderService orderService;
     private final UserService service;
-    @GetMapping("/menu")
+    @GetMapping("/")
     public ModelAndView menu(Model model) {
         model.addAttribute("products", dishService.findAllDish());
         return new ModelAndView("menu");
     }
-
-
-
-
 
     @GetMapping("/error")
     public ModelAndView showErrorForm(String message){
