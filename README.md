@@ -11,23 +11,9 @@ git clone https://github.com/Eraaalex/RestaurantApp.git
 Or you can paste the following link (https://github.com/Eraaalex/RestaurantApp.git) into your IntelJ IDEA 
 by clicking File -> New -> Project from Version Control.... Then paste the link and click Clone.
 
-2. Then you need to open the project in IntelJ IDEA and run the main method in the class `RestaurantApplication`.
-
-It's important to note that the app is deployed on port: 8081. So, you need to make sure that this port is not used by another application.
-
-3. Next, you need to open the browser and paste the following link: http://localhost:8081/menu
-
-4. If you see the following message: "Welcome to the restaurant app!", then the project is successfully deployed.
-
-For the reason that lack of time, I didn't have time to implement the pleasant front-end part of the project (even Bootstrap).
-
-
-_Besides, I almost died while I was learning all this from working with Spring, Rest, Multithreading, and so on._
-
-
 # Docker
 
-I definitely recommend using Docker to run the project. Just open console and run the following command:
+2. I definitely recommend using Docker to run the project. Just open console and run the following command:
 
 ```Docker
 docker-compose build
@@ -43,5 +29,17 @@ docker-compose down
 ```
 
 Consider that you need to have Docker installed and Docker Daemon run on your computer.
+
+# Without Docker
+
+2. Then you need to open the project in IntelJ IDEA and run the main method in the class `RestaurantApplication`.
+
+It's important to note that the app is deployed on port: 8080. So, you need to make sure that this port is not used by another application.
+
+3. Next, you need to open the browser and paste the following link: http://localhost:8080
+
+4. If you see the following message: "Welcome to the restaurant app!", then the project is successfully deployed.
+
+For the reason that lack of time, I didn't have time to implement the pleasant front-end part of the project (even Bootstrap).
 
 
