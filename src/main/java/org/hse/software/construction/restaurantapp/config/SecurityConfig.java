@@ -1,59 +1,64 @@
 package org.hse.software.construction.restaurantapp.config;
 
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hse.software.construction.restaurantapp.service.impl.user.CustomizedUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@AllArgsConstructor
+@Slf4j
 public class SecurityConfig {
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomizedUserDetailsService();
-    }
+    private final CustomizedUserDetailsService userDetailService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        return http.csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(auth -> auth.requestMatchers("api/v1/dishes/welcome", "api/v1/dishes/new_user", "/api/v1/dishes/new_user").permitAll()
-//                .requestMatchers("api/v1/dishes/**").authenticated())
-//                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
-//                .build();
-//
-//    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest()
-                        .permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers( "/login","/signup","/design").permitAll()
+                        .requestMatchers("/","/order/**")
+                        .hasAnyAuthority("ROLE_ADMIN","ROLE_USER")
+                        .requestMatchers("/product/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/users/admin/**").hasAnyAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .failureHandler((request, response, exception) -> {
+                            log.error("Authentication failure: ", exception);
+                            response.sendRedirect("/error");
+                        })
+                        .permitAll()
+                )
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
+
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailService)
+                .passwordEncoder(passwordEncoder());
+    }
+
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService());
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(8);
+    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**");
     }
 }
+

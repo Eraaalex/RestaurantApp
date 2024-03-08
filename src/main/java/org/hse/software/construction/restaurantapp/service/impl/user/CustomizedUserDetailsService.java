@@ -1,27 +1,31 @@
 package org.hse.software.construction.restaurantapp.service.impl.user;
 
 
-import org.hse.software.construction.restaurantapp.config.CustomizedUserDetails;
-import org.hse.software.construction.restaurantapp.model.Human;
+import lombok.AllArgsConstructor;
+import org.hse.software.construction.restaurantapp.model.Role;
 import org.hse.software.construction.restaurantapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
+@AllArgsConstructor
 public class CustomizedUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Human> user = repository.findByName(username);
-        return user.map(CustomizedUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+        return userRepository.findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }

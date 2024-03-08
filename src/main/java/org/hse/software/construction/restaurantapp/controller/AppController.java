@@ -3,15 +3,16 @@ package org.hse.software.construction.restaurantapp.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hse.software.construction.restaurantapp.model.Order;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Human;
-import org.hse.software.construction.restaurantapp.model.Order;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.OrderService;
 import org.hse.software.construction.restaurantapp.service.UserService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -20,10 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class AppController {
     private final DishService dishService;
     private final UserService service;
+
     @GetMapping("/")
     public ModelAndView menu(Model model) {
         model.addAttribute("products", dishService.findAllDish());
-        return new ModelAndView("menu");
+        return new ModelAndView("/menu");
     }
 
     @GetMapping("/error")
@@ -33,13 +35,9 @@ public class AppController {
         return model;
     }
 
-    @GetMapping("/admin")
-    public ModelAndView showAdminMainForm(){
-        ModelAndView model = new ModelAndView();
-        model.addObject("admin", new Human());
-        model.addObject("dishes", dishService.findAllDish());
-        return new ModelAndView("admin-main");
-
+    @GetMapping("/all-users")
+    public List<Human> getAllUsers(){
+        return service.findAllUsers();
     }
 
 

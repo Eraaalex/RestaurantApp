@@ -1,6 +1,7 @@
 package org.hse.software.construction.restaurantapp.service.impl.dish;
 
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.valves.StuckThreadDetectionValve;
 import org.hse.software.construction.restaurantapp.model.Dish;
@@ -26,6 +27,7 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @Transactional
     public Dish saveDish(Dish dish) {
         return repository.save(dish);
     }
@@ -36,15 +38,14 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
+    @Transactional
     public Dish updateDish(Dish dish) {
         Optional<Dish> existingDish = repository.findById(dish.getId());
         if (existingDish.isPresent()) {
             Dish updatedDish = existingDish.get();
-            // Update fields
             updatedDish.setName(dish.getName());
             updatedDish.setPrice(dish.getPrice());
             updatedDish.setAmount(dish.getAmount());
-            // Save the updated entity
             return repository.save(updatedDish);
         }
         return null;

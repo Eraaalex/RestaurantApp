@@ -38,8 +38,5 @@ It's important to note that the app is deployed on port: 8080. So, you need to m
 
 3. Next, you need to open the browser and paste the following link: http://localhost:8080
 
-4. If you see the following message: "Welcome to the restaurant app!", then the project is successfully deployed.
-
-For the reason that lack of time, I didn't have time to implement the pleasant front-end part of the project (even Bootstrap).
-
+4. Then the project is successfully deployed.
 

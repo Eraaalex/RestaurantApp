@@ -1,13 +1,11 @@
 package org.hse.software.construction.restaurantapp.service;
 
-import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Order;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-public interface OrderService {
+public interface BucketService {
 
     List<Order> findAllOrder();
 

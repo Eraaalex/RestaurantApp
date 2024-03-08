@@ -3,11 +3,11 @@ package org.hse.software.construction.restaurantapp.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hse.software.construction.restaurantapp.CookingService;
-import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Order;
+import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.service.OrderHandler;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.OrderService;
+import org.hse.software.construction.restaurantapp.service.BucketService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ import java.util.List;
 @SessionAttributes("order")
 public class PreOrderController {
     private final DishService dishService;
-    private final OrderService orderService;
+    private final BucketService bucketService;
     private final OrderHandler orderHandler;
     private final CookingService cookingService;
 
@@ -57,14 +57,14 @@ public class PreOrderController {
         }
         order.setCost(totalCost);
 
-        Order savedOrder=orderService.saveOrder(order);
+        Order savedOrder = bucketService.saveOrder(order);
         cookingService.processOrder(order);
         return new ModelAndView("redirect:/order/details/" + savedOrder.getId());
     }
 
     @PostMapping("/save-order")
     public ModelAndView saveOrder(@ModelAttribute("order") Order order) {
-        orderService.saveOrder(order);
+        bucketService.saveOrder(order);
         return new ModelAndView("redirect:/menu");
     }
 }

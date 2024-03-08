@@ -2,6 +2,12 @@ package org.hse.software.construction.restaurantapp.service;
 
 import org.hse.software.construction.restaurantapp.model.Human;
 
+import java.util.List;
+import java.util.UUID;
+
 public interface UserService {
-    public void addUser(Human user) ;
+    void addUser(Human user);
+    Human findById(UUID userId);
+    List<Human> findAllUsers();
+    Human findByName(String name);
 }

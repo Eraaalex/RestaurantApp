@@ -4,47 +4,91 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-</head>
-<body>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 0;
+        }
+
+
+    </style>
+</head>
+<div th:replace="~{components/header :: headerFragment}"></div>
 <h2 th:text="'Hello ' +${admin.name}"></h2>
 
-<form method="POST" th:action="@{/dishes/add-dish}" th:object="${dish}">
-    <h3>Add new dish</h3>
+
+<div class="container">
+    <form method="POST" th:action="@{/dishes/add-dish}" th:object="${dish}">
+        <h3>Add new dish</h3>
+        <hr>
+        <div>
+            <div class="form-group">
+                <label>Dish name</label>
+                <input type="text" th:field="*{name}" class="form-control"></div>
+
+            <div class="form-group"></div>
+            <label>Dish price</label>
+            <input type="number" th:field="*{price}" min="0" class="form-control">
+
+            <div class="form-group"><label>Dish current quantity in stock</label>
+                <input type="number" th:field="*{amount}" min="0" class="form-control">
+            </div>
+
+
+            <div class="form-group">
+                <label>Dish time to cook in minutes</label>
+                <input type="number" th:field="*{time}" min="0" class="form-control">
+            </div>
+
+
+        </div>
+        <input type="hidden" name="userName" th:value="${admin.name}">
+        <button type="submit" class="btn btn-outline-success">Add Dish!</button>
+    </form>
     <hr>
-    <div>
-        <label>Dish name</label><input type="text" th:field="*{name}">
-        <br/>
+</div>
+<div class="container">
+    <form method="POST" th:action="@{/dishes/update-dish}" th:object="${dish}">
+        <h3>Update dish</h3>
+        <hr>
+        <div>
+            <div class="form-group">
+                <label>Dish name</label>
+                <input type="text" th:field="*{name}" class="form-control">
+            </div>
 
-        <label>Dish price</label><input type="number" th:field="*{price}" min="0">
-        <br/>
+            <div class="alert alert-danger form-group" th:if="${#fields.hasErrors('name')}">
+                <ul>
+                    <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                </ul>
+            </div>
 
-        <label>Dish current quantity in stock</label><input type="number" th:field="*{amount}" min="0">
-        <br/>
-        <label>Dish time to cook in minutes</label><input type="number" th:field="*{time}" min="0">
-        <br/>
+            <div class="form-group"></div>
+            <label>Dish price</label>
+            <input type="number" th:field="*{price}" min="0" class="form-control">
 
-    </div>
-    <button type="submit">Add Dish!</button>
-</form>
-<hr>
+            <div class="form-group"><label>Dish current quantity in stock</label>
+                <input type="number" th:field="*{amount}" min="0" class="form-control">
+            </div>
 
 
-<!--<form method="POST" th:action="@{/update-dish}" th:object="${order}">-->
-<!--    <h3>Change dish info</h3>-->
-<!--    <hr>-->
-<!--    <select name="dishId">-->
-<!--        <option th:each="dish : ${dishes}" th:value="${dish.id}" th:text="${dish.name}"></option>-->
-<!--    </select>-->
-<!--    <input type="text" name="new_name" value="">-->
-<!--    <input type="number" name="quantity" min="0" value="0">-->
-<!--    <input type="number" name="price" min="0" value="0">-->
-<!--    <input type="number" name="time" min="0" value="0">-->
-<!--    <input type="hidden" name="orderId" th:value="${dish.id}">-->
-<!--    <button type="submit">Add to Order</button>-->
+            <div class="form-group">
+                <label>Dish time to cook in minutes</label>
+                <input type="number" th:field="*{time}" min="0" class="form-control">
+            </div>
+            <input type="hidden" name="userName" th:value="${admin.name}">
 
-<!--</form>-->
-
+        </div>
+        <button type="submit" class="btn btn-outline-success">Update Dish!</button>
+    </form>
+</div>
 
 </body>
 </html>

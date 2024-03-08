@@ -2,33 +2,30 @@ package org.hse.software.construction.restaurantapp;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Order;
+import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Status;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.OrderService;
+import org.hse.software.construction.restaurantapp.service.BucketService;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
 @AllArgsConstructor
 public class CookingService {
     private DishService dishService;
-    private OrderService orderService;
+    private BucketService bucketService;
     private final ExecutorService cookExecutor = Executors.newFixedThreadPool(3);
 
     private final Map<UUID, List<Future<?>>> cookingTasks = new ConcurrentHashMap<>();
 
     public void processOrder(Order order) {
         order.setStatus(Status.IN_PROGRESS);
-        orderService.updateOrder(order);
+        bucketService.updateOrder(order);
         List<Future<?>> tasks = new ArrayList<>();
 
         order.getSelectedDishes().forEach((dishId, amount) -> {
@@ -47,11 +44,11 @@ public class CookingService {
 
     public void addDishToOrder(UUID orderId, UUID dishId, int quantity) {
 
-        Order order = orderService.findById(orderId);
+        Order order = bucketService.findById(orderId);
         Dish dish = dishService.findById(dishId);
         log.info("[ADD] in Order " + orderId + "dish:" + dish.getName() + quantity + " to cook!");
         order.addDish(dishId, quantity, dish.getPrice());
-        orderService.updateOrder(order);
+        bucketService.updateOrder(order);
 
         List<Future<?>> tasks = cookingTasks.getOrDefault(orderId, new ArrayList<>());
 
@@ -103,7 +100,22 @@ public class CookingService {
 
     private void completeOrder(Order order) {
         order.setStatus(Status.COMPLETED);
-        orderService.updateOrder(order);
+        bucketService.updateOrder(order);
         log.info("Order " + order.getId() + " completed!");
     }
+    public synchronized void cancelOrder(UUID orderId) {
+
+        Order order = bucketService.findById(orderId);
+        order.setStatus(Status.CANCELED);
+        bucketService.updateOrder(order);
+        log.info("UPDATED order " + orderId);
+        List<Future<?>> tasks = cookingTasks.get(orderId);
+        if (tasks != null) {
+            tasks.forEach(future -> future.cancel(true));
+        }
+        cookingTasks.remove(orderId);
+        log.info("REMOED order " + orderId);
+    }
+
+
 }

@@ -4,8 +4,6 @@ import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hse.software.construction.restaurantapp.model.Dish;
-import org.hse.software.construction.restaurantapp.model.Order;
-import org.hse.software.construction.restaurantapp.model.Status;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,9 +53,10 @@ public class OrderHandler {
     }
 
     @Transactional
-    public boolean checkToAddDish( UUID dishId, int quantity) {
+    public boolean reserveDish(UUID dishId, int quantity) {
         final int maxRetries = 3;
         int attempts = 0;
+
 
         while (maxRetries > attempts) {
             try {

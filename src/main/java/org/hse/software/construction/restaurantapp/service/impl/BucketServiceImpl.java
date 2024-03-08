@@ -2,17 +2,16 @@ package org.hse.software.construction.restaurantapp.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.hse.software.construction.restaurantapp.model.Order;
-import org.hse.software.construction.restaurantapp.service.OrderService;
+import org.hse.software.construction.restaurantapp.service.BucketService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
 @Service
 @AllArgsConstructor
-public class OrderServiceImpl implements OrderService {
+public class BucketServiceImpl implements BucketService {
     List<Order> orders;
     @Override
     public List<Order> findAllOrder() {
@@ -42,5 +41,6 @@ public class OrderServiceImpl implements OrderService {
     public void deleteOrder(UUID id) {
         orders.removeIf(order -> order.getId().equals(id));
     }
+
 
 }

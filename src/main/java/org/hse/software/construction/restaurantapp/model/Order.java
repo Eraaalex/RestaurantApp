@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hse.software.construction.restaurantapp.service.DishService;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,10 +12,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
-//@Entity
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -27,10 +28,16 @@ public class Order {
     @NotNull
     @Size(min = 1, message = "You must choose at least 1 dish")
     @ElementCollection
-//    @CollectionTable(name = "order_selected_dishes", joinColumns = @JoinColumn(name = "order_id"))
-//    @MapKeyColumn(name = "dish_id")
-//    @Column(name = "amount")
     private Map<UUID, Integer> selectedDishes = new HashMap<>();
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "order_dish",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "dish_id"))
+    private Set<Dish> dishes = new HashSet<>();
+
 
     @Transient
     public void addDish(UUID dishId, int amount, double price) {
@@ -60,3 +67,5 @@ public class Order {
 
 
 }
+
+
