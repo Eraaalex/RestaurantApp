@@ -24,8 +24,9 @@ public class AppController {
 
     @GetMapping("/")
     public ModelAndView menu(Model model) {
-        model.addAttribute("products", dishService.findAllDish());
-        return new ModelAndView("/menu");
+        log.info("[menu]" + dishService.findAllDish());
+        model.addAttribute("dishes", dishService.findAllDish());
+        return new ModelAndView("menu");
     }
 
     @GetMapping("/error")
@@ -39,8 +40,6 @@ public class AppController {
     public List<Human> getAllUsers(){
         return service.findAllUsers();
     }
-
-
 
     @GetMapping("/{name}")
     public Dish findByName(@PathVariable String name) {
@@ -61,7 +60,7 @@ public class AppController {
 
     @PostMapping("/new-user")
     public String addUser(@RequestBody Human user) {
-        service.addUser(user);
+        service.addUser(user, true);
         return "User is saved";
     }
 
@@ -75,8 +74,5 @@ public class AppController {
     public Dish dish() {
         return new Dish();
     }
-
-
-
 
 }

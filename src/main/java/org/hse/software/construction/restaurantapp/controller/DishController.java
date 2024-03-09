@@ -34,24 +34,25 @@ public class DishController {
     @PostMapping("/new-dish")//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ModelAndView saveDish(@RequestBody Dish dish) {
         dishService.saveDish(dish);
-        return new ModelAndView("redirect:/menu");
+        return new ModelAndView("redirect:/");
     }
 
     @PostMapping("/add-dish")
-    public ModelAndView addDish(@Valid Dish dish, Errors errors) throws Exception {
+    public String addDish(@ModelAttribute("dish") Dish dish, Errors errors) throws Exception {
+        log.info("[add dish] ok" + dish);
         if (errors.hasErrors()) {
+            log.info("[add dish] error" + dish);
             throw new Exception("Error");
         }
         dishService.saveDish(dish);
-        return new ModelAndView("redirect:/menu");
+        return "redirect:/";
     }
-
 
     @PostMapping("/update-dish")
     public String updateDish(@ModelAttribute("dish") Dish dish, @RequestParam("userName") String userName, BindingResult result, Model model) {
-
         log.info("UserId" + userName);
         Human currentUser = userService.findByName(userName);
+        model.addAttribute("human", new Human());
         if (dishService.findByName(dish.getName()) == null) {
             result.rejectValue("name", "error.dish", "This dish name does not exist.");
         }
@@ -62,11 +63,8 @@ public class DishController {
             model.addAttribute("dish", dish);
             return "admin-main";
         }
-
-
         dishService.updateDish(dish);
         return "redirect:/users/admin/" + currentUser.getId();
     }
-
 
 }

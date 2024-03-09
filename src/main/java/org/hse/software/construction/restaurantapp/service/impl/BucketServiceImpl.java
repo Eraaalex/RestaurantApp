@@ -12,34 +12,35 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class BucketServiceImpl implements BucketService {
-    List<Order> orders;
+    List<Order> buckets;
+
     @Override
-    public List<Order> findAllOrder() {
-        return orders;
+    public List<Order> findAllOrders() {
+        return buckets;
     }
 
     @Override
     public Order saveOrder(Order order) {
 
-        orders.add(order);
+        buckets.add(order);
         return order;
     }
 
     @Override
     public Order findById(UUID id) {
-        return orders.stream().filter(order -> order.getId().equals(id)).findFirst().orElse(null);
+        return buckets.stream().filter(order -> order.getId().equals(id)).findFirst().orElse(null);
     }
 
     @Override
     public Order updateOrder(Order order) {
-        orders.removeIf(o -> o.getId().equals(order.getId()));
-        orders.add(order);
+        buckets.removeIf(bucket -> bucket.getId().equals(order.getId()));
+        buckets.add(order);
         return order;
     }
 
     @Override
     public void deleteOrder(UUID id) {
-        orders.removeIf(order -> order.getId().equals(id));
+        buckets.removeIf(order -> order.getId().equals(id));
     }
 
 

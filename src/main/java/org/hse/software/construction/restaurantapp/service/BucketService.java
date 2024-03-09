@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface BucketService {
 
-    List<Order> findAllOrder();
+    List<Order> findAllOrders();
 
     Order saveOrder(Order order);
 

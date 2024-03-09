@@ -1,6 +1,8 @@
 package org.hse.software.construction.restaurantapp.service.impl.user;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hse.software.construction.restaurantapp.model.Human;
 import org.hse.software.construction.restaurantapp.model.Role;
 import org.hse.software.construction.restaurantapp.repository.RoleRepository;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
@@ -21,7 +24,9 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Override
-    public void addUser(Human user) {
+    @Transactional
+    public void addUser(Human user, Boolean isAdmin) {
+        log.info("[addUser]" + user);
         user.setActive(true);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role role = roleRepository.findByName("ROLE_USER");
@@ -29,15 +34,19 @@ public class UserServiceImpl implements UserService {
             role = new Role();
             role.setName("ROLE_USER");
             roleRepository.save(role);
-            role = new Role();
-            role.setName("ROLE_ADMIN");
-            roleRepository.save(role);
         }
-        Role role1 = roleRepository.findByName("ROLE_USER");
-        Role role2 = roleRepository.findByName("ROLE_ADMIN");
-        user.getRoles().add(role1);
-        user.getRoles().add(role2);
+        user.getRoles().add(role);
 
+        if (isAdmin) {
+            role = roleRepository.findByName("ROLE_ADMIN");
+            if (role == null) {
+                role = new Role();
+                role.setName("ROLE_ADMIN");
+                roleRepository.save(role);
+            }
+            user.getRoles().add(role);
+        }
+        log.info("[saveUser]" + user);
         userRepository.save(user);
     }
 
@@ -58,3 +67,4 @@ public class UserServiceImpl implements UserService {
     }
 
 }
+

@@ -9,14 +9,20 @@
 <body>
 <div th:replace="~{components/header :: headerFragment}"></div>
 
+
 <h1>Menu</h1>
 <hr>
-<#list products as product>
-    <div>
-        <p><b>${product.name}</b> ${product.price} $$$ | Be ready, in stock only: ${product.amount} pieces | Time to
-            cook in seconds: ${product.time}</div>
+<div th:each="dish : ${dishes}">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${dish.name}"></h5>
+            <h6 class="card-subtitle mb-2 text-muted" th:text="${dish.price} + '$'"></h6>
+            <p class="card-text" th:text="'in stock only:' + ${dish.amount} + ' pieces'">
+            <p class="card-text" th:text="${dish.time} + ' seconds  to cook'">
+        </div>
+    </div>
     <hr>
-</#list>
+</div>
 
 <a href="/design">Make order</a>
 </body>

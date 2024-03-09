@@ -20,7 +20,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/design")
 @AllArgsConstructor
-@SessionAttributes("order")
 public class PreOrderController {
     private final DishService dishService;
     private final BucketService bucketService;
@@ -39,15 +38,17 @@ public class PreOrderController {
 
     @GetMapping
     public ModelAndView showDesignForm(String message) {
+
         List<Dish> dishes = dishService.findAllDish();
         ModelAndView modelAndView = new ModelAndView("design");
-        modelAndView.addObject("message", message);
+        log.error("[showDesignForm]" + dishes);
         modelAndView.addObject("dishes", dishes);
         return modelAndView;
     }
 
     @PostMapping
-    public ModelAndView processPreOrder(@Valid Order order, Errors errors) {
+    public ModelAndView processPreOrder(@ModelAttribute Order order, Errors errors) {
+        log.info("[processPreOrder]" + order);
         if (errors.hasErrors()) {
             return showDesignForm("Your order was not accepted");
         }
@@ -56,7 +57,7 @@ public class PreOrderController {
             return showDesignForm("Your order was not accepted");
         }
         order.setCost(totalCost);
-
+        log.info("[processPreOrder] 2" + order);
         Order savedOrder = bucketService.saveOrder(order);
         cookingService.processOrder(order);
         return new ModelAndView("redirect:/order/details/" + savedOrder.getId());

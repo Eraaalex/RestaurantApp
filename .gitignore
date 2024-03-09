@@ -33,11 +33,10 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+
 .vscode/
 
-### Not finished yet ###
-src/main/java/org/hse/software/construction/restaurantapp/controller/UserController.java
+
 
 init.sql
 deploy.sh
