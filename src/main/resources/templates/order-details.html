@@ -58,7 +58,7 @@
     </form>
 </div>
 <div class="container-sm">
-    <div>
+    <div th:if="${order.status.toString().toLowerCase() != 'completed'}">
     <form method="post" th:action="@{/order/{orderId}/cancel-order(orderId=${order.id})}" class="card form-group">
         <button type="submit" class="btn btn-danger">Cancel order!</button>
     </form>

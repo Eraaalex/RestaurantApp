@@ -1,18 +1,21 @@
 package org.hse.software.construction.restaurantapp.service;
 
 import org.hse.software.construction.restaurantapp.model.Cart;
+import org.hse.software.construction.restaurantapp.model.Order;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface OrderService {
-    List<Cart> findAllOrders();
+    List<Order> findAllOrders();
 
-    Cart saveOrder(Cart cart);
+    Order saveOrder(Order order);
 
-    Cart findById(UUID id);
+    Order saveOrderFromCart(Cart cart);
 
-    Cart updateOrder(Cart cart);
+    Order findById(UUID id);
+
+    Order updateOrder(Order order);
 
     void deleteOrder(UUID id);
 

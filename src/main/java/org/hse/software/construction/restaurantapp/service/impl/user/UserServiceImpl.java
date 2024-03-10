@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
 
+
     @Override
     @Transactional
     public void addUser(Human user, Boolean isAdmin) {
@@ -36,14 +37,15 @@ public class UserServiceImpl implements UserService {
             roleRepository.save(role);
         }
         user.getRoles().add(role);
-
+        role = roleRepository.findByName("ROLE_ADMIN");
+        if (role == null) {
+            role = new Role();
+            role.setName("ROLE_ADMIN");
+            roleRepository.save(role);
+            isAdmin = true; // First user always admin
+        }
         if (isAdmin) {
-            role = roleRepository.findByName("ROLE_ADMIN");
-            if (role == null) {
-                role = new Role();
-                role.setName("ROLE_ADMIN");
-                roleRepository.save(role);
-            }
+
             user.getRoles().add(role);
         }
         log.info("[saveUser]" + user);

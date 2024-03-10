@@ -1,4 +1,4 @@
-package org.hse.software.construction.restaurantapp.controller;
+package org.hse.software.construction.restaurantapp.controller.statistics;
 
 
 import org.springframework.stereotype.Controller;
