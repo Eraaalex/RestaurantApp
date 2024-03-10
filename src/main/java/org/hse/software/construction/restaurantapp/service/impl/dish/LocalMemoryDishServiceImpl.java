@@ -17,7 +17,7 @@ public class LocalMemoryDishServiceImpl implements DishService {
 
     @Override
     public List<Dish> findAllDish() {
-        return  repository.findAllDishes();
+        return repository.findAllDishes();
     }
 
     @Override
@@ -37,8 +37,13 @@ public class LocalMemoryDishServiceImpl implements DishService {
     }
 
     @Override
-    public void deleteDish(String name) {
+    public void deleteDishByName(String name) {
         repository.deleteDish(name);
+    }
+
+    @Override
+    public void deleteDish(UUID id) {
+        repository.deleteDish(findById(id).getName());
     }
 
     @Override

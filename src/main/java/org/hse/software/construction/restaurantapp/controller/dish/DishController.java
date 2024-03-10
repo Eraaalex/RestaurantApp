@@ -1,4 +1,4 @@
-package org.hse.software.construction.restaurantapp.controller;
+package org.hse.software.construction.restaurantapp.controller.dish;
 
 
 import lombok.AllArgsConstructor;
@@ -12,9 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -26,22 +24,14 @@ public class DishController {
     UserService userService;
 
     @GetMapping("/all-dishes")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Dish> findAllDishes() {
         return dishService.findAllDish();
     }
 
-    @PostMapping("/new-dish")//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ModelAndView saveDish(@RequestBody Dish dish) {
-        dishService.saveDish(dish);
-        return new ModelAndView("redirect:/");
-    }
 
     @PostMapping("/add-dish")
     public String addDish(@ModelAttribute("dish") Dish dish, Errors errors) throws Exception {
-        log.info("[add dish] ok" + dish);
         if (errors.hasErrors()) {
-            log.info("[add dish] error" + dish);
             throw new Exception("Error");
         }
         dishService.saveDish(dish);
@@ -67,4 +57,22 @@ public class DishController {
         return "redirect:/users/admin/" + currentUser.getId();
     }
 
+    @PostMapping("/delete-dish")
+    public String deleteDish(@ModelAttribute("dish") Dish dish,
+                             @RequestParam("userName") String userName,
+                             BindingResult result, Model model) {
+        Human currentUser = userService.findByName(userName);
+        model.addAttribute("human", new Human());
+        Dish currentDish = dishService.findByName(dish.getName());
+        if (currentDish == null) {
+            model.addAttribute("error", "This dish name does not exist.");
+            model.addAttribute("admin", currentUser);
+            return "admin-main";
+        } else {
+            log.info("Delete dish" + currentDish);
+            dishService.deleteDish(currentDish.getId());
+            return "redirect:/users/admin/" + currentUser.getId();
+        }
+
+    }
 }

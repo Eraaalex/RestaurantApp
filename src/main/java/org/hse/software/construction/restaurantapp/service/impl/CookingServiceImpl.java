@@ -2,18 +2,21 @@ package org.hse.software.construction.restaurantapp.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hse.software.construction.restaurantapp.OrderCompletedEvent;
 import org.hse.software.construction.restaurantapp.model.Cart;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Status;
+import org.hse.software.construction.restaurantapp.service.CartService;
 import org.hse.software.construction.restaurantapp.service.CookingService;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.CartService;
+import org.hse.software.construction.restaurantapp.utility.OrderCompletedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.*;
 
 @Service
@@ -30,6 +33,7 @@ public class CookingServiceImpl implements CookingService {
 
     public void processOrder(Cart cart) {
         cart.setStatus(Status.IN_PROGRESS);
+        log.info("[cart]" + cart);
         cartService.updateBucket(cart);
         List<Future<?>> tasks = new ArrayList<>();
 
@@ -106,11 +110,12 @@ public class CookingServiceImpl implements CookingService {
     private void completeOrder(Cart cart) {
         cart.setStatus(Status.COMPLETED);
         cartService.updateBucket(cart);
-        log.info("Order " + cart.getId() + " completed!");
+        log.info("[cart] " + cart + " completed!");
 
         OrderCompletedEvent event = new OrderCompletedEvent(this, cart);
         eventPublisher.publishEvent(event);
     }
+
     public synchronized void cancelOrder(UUID orderId) {
 
         Cart cart = cartService.findById(orderId);

@@ -1,7 +1,6 @@
 package org.hse.software.construction.restaurantapp.repository;
 
 
-
 import org.hse.software.construction.restaurantapp.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 

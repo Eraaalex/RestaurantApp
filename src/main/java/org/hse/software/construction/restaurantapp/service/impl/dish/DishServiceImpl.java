@@ -3,7 +3,6 @@ package org.hse.software.construction.restaurantapp.service.impl.dish;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.valves.StuckThreadDetectionValve;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.repository.DishRepository;
 import org.hse.software.construction.restaurantapp.service.DishService;
@@ -34,13 +33,13 @@ public class DishServiceImpl implements DishService {
 
     @Override
     public Dish findByName(String name) {
-        return repository.findByName(name);
+        return repository.findByName(name).orElse(null);
     }
 
     @Override
     @Transactional
     public Dish updateDish(Dish dish) {
-        Optional<Dish> existingDish = repository.findById(dish.getId());
+        Optional<Dish> existingDish = repository.findByName(dish.getName());
         if (existingDish.isPresent()) {
             Dish updatedDish = existingDish.get();
             updatedDish.setName(dish.getName());
@@ -52,8 +51,13 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public void deleteDish(String name) {
+    public void deleteDishByName(String name) {
         repository.deleteByName(name);
+    }
+
+    @Override
+    public void deleteDish(UUID id) {
+        repository.deleteById(id);
     }
 
     @Override

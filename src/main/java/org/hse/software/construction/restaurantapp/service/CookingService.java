@@ -1,18 +1,18 @@
 package org.hse.software.construction.restaurantapp.service;
 
-import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Cart;
+import org.hse.software.construction.restaurantapp.model.Dish;
 
 import java.util.UUID;
 
 public interface CookingService {
 
-    public void processOrder(Cart cart);
+    void processOrder(Cart cart);
 
-    public void addDishToOrder(UUID orderId, UUID dishId, int quantity);
+    void addDishToOrder(UUID orderId, UUID dishId, int quantity);
 
-    public void cookDish(Dish dish);
+    void cookDish(Dish dish);
 
-    public void cancelOrder(UUID orderId);
+    void cancelOrder(UUID orderId);
 
 }

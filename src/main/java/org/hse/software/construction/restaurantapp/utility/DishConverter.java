@@ -1,8 +1,7 @@
-package org.hse.software.construction.restaurantapp;
+package org.hse.software.construction.restaurantapp.utility;
 
 
 import lombok.AllArgsConstructor;
-import org.hibernate.annotations.Comment;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.service.DishService;
 import org.springframework.core.convert.converter.Converter;
