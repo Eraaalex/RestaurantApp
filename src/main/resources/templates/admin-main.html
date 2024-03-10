@@ -8,7 +8,7 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <style>
-        body {
+        .body {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -29,100 +29,97 @@
     </style>
 </head>
 <div th:replace="~{components/header :: headerFragment}"></div>
-<h2 th:text="'Hello ' +${admin.name}"></h2>
+
+<div class="body">
+    <h2 th:text="'Hello ' +${admin.name}"></h2>
 
 
-<div class="container">
-    <form method="POST" th:action="@{/dishes/add-dish}" th:object="${dish}">
-        <h3>Add new dish</h3>
-        <hr>
-        <div>
-            <div class="form-group">
-                <label>Dish name</label>
-                <input type="text" th:field="*{name}" class="form-control"></div>
+    <div class="container">
+        <form method="POST" th:action="@{/dishes/add-dish}" th:object="${dish}">
+            <h3>Add new dish</h3>
+            <hr>
+            <div>
+                <div class="form-group">
+                    <label>Dish name</label>
+                    <input type="text" th:field="*{name}" class="form-control"></div>
 
-            <div class="form-group"></div>
-            <label>Dish price</label>
-            <input type="number" th:field="*{price}" min="0" class="form-control">
+                <div class="form-group"></div>
+                <label>Dish price</label>
+                <input type="number" th:field="*{price}" min="0" class="form-control" step="any">
 
-            <div class="form-group"><label>Dish current quantity in stock</label>
-                <input type="number" th:field="*{amount}" min="0" class="form-control">
-            </div>
-
-
-            <div class="form-group">
-                <label>Dish time to cook in minutes</label>
-                <input type="number" th:field="*{time}" min="0" class="form-control">
-            </div>
+                <div class="form-group"><label>Dish current quantity in stock</label>
+                    <input type="number" th:field="*{amount}" min="0" class="form-control">
+                </div>
 
 
-        </div>
-        <input type="hidden" name="userName" th:value="${admin.name}">
-        <button type="submit" class="btn btn-outline-success">Add Dish!</button>
-    </form>
-    <hr>
-</div>
-<div class="container">
-    <form method="POST" th:action="@{/dishes/update-dish}" th:object="${dish}">
-        <h3>Update dish</h3>
-        <hr>
-        <div>
-            <div class="form-group">
-                <label>Dish name</label>
-                <input type="text" th:field="*{name}" class="form-control">
-            </div>
-
-            <div class="alert alert-danger form-group" th:if="${#fields.hasErrors('name')}">
-                <ul>
-                    <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
-                </ul>
-            </div>
-
-            <div class="form-group"></div>
-            <label>Dish price</label>
-            <input type="number" th:field="*{price}" min="0" class="form-control">
-
-            <div class="form-group"><label>Dish current quantity in stock</label>
-                <input type="number" th:field="*{amount}" min="0" class="form-control">
-            </div>
+                <div class="form-group">
+                    <label>Dish time to cook in minutes</label>
+                    <input type="number" th:field="*{time}" min="0" class="form-control">
+                </div>
 
 
-            <div class="form-group">
-                <label>Dish time to cook in minutes</label>
-                <input type="number" th:field="*{time}" min="0" class="form-control">
             </div>
             <input type="hidden" name="userName" th:value="${admin.name}">
+            <button type="submit" class="btn btn-outline-success">Add Dish!</button>
+        </form>
+        <hr>
+    </div>
+    <div class="container">
+        <form method="POST" th:action="@{/dishes/update-dish}" th:object="${dish}">
+            <h3>Update dish</h3>
+            <hr>
+            <div>
+                <div class="form-group">
+                    <label>Dish name</label>
+                    <input type="text" th:field="*{name}" class="form-control">
+                </div>
 
-        </div>
-        <button type="submit" class="btn btn-outline-success">Update Dish!</button>
-    </form>
+                <div class="alert alert-danger form-group" th:if="${#fields.hasErrors('name')}">
+                    <ul>
+                        <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>
+                    </ul>
+                </div>
+
+                <div class="form-group"></div>
+                <label>Dish price</label>
+                <input type="number" th:field="*{price}" min="0" class="form-control">
+
+                <div class="form-group"><label>Dish current quantity in stock</label>
+                    <input type="number" th:field="*{amount}" min="0" class="form-control">
+                </div>
+
+
+                <div class="form-group">
+                    <label>Dish time to cook in minutes</label>
+                    <input type="number" th:field="*{time}" min="0" class="form-control">
+                </div>
+                <input type="hidden" name="userName" th:value="${admin.name}">
+
+            </div>
+            <button type="submit" class="btn btn-outline-success">Update Dish!</button>
+        </form>
+    </div>
+
+
+    <div class="container">
+        <h3>Add new admin</h3>
+        <hr>
+        <form method="POST" th:action="@{/signup/admin/}" th:object="${human}">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">@</span>
+                <input type="text" class="form-control" th:field="*{name}" placeholder="name"
+                       aria-label="name"
+                       aria-describedby="basic-addon1" name="username">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" th:field="*{password}" name="password"
+                       id="exampleInputPassword1"
+                       placeholder="Password">
+            </div>
+            <input type="hidden" name="userName" th:value="${admin.name}">
+            <button type="submit" class="btn btn-dark">Sign Up admin</button>
+        </form>
+    </div>
 </div>
-
-
-<div class="container">
-    <h3>Add new admin</h3>
-    <hr>
-    <form method="POST" th:action="@{/signup/admin/}" th:object="${human}">
-
-<!--        <div class="alert alert-danger form-group" th:if="${#fields.hasErrors('userEr')}">-->
-<!--            <ul>-->
-<!--                <li th:each="error : ${errors}" th:text="${error.defaultMessage}"></li>-->
-<!--            </ul>-->
-<!--        </div>-->
-        <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">@</span>
-            <input type="text" class="form-control" th:field="*{name}" placeholder="name"
-                   aria-label="name"
-                   aria-describedby="basic-addon1" name="username">
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" th:field="*{password}" name="password" id="exampleInputPassword1"
-                   placeholder="Password">
-        </div>
-        <input type="hidden" name="userName" th:value="${admin.name}">
-        <button type="submit" class="btn btn-dark">Sign Up admin</button>
-    </form>
-</div>
-
 </body>
 </html>

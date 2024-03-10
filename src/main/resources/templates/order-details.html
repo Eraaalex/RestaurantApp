@@ -5,6 +5,31 @@
     <title>See order</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        .container {
+            width: 80%;
+            border: 1px solid #cfd4d9;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 1400px;
+            margin: 20px;
+        }
+
+        .container-sm {
+            display: flex;
+            justify-content: space-around;
+            width: 60%;
+            padding: 10px;
+            max-width: 1400px;
+            margin: 20px;
+        }
+
+        .container-form {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,25 +39,36 @@
 <p>Cost: <span th:text="${order.cost}"></span></p>
 
 <h3>Selected Dishes:</h3>
-<ul>
-    <li th:each="entry : ${order.selectedDishes}">
+<ul class="list-group">
+    <li th:each="entry : ${order.selectedDishes}" class="list-group-item">
         <span th:text="${dishConverter.convert(entry.key).name}"></span>: <span th:text="${entry.value}"></span>
     </li>
 </ul>
 
-<h3>Add Dish to Order:</h3>
-<form method="post" th:action="@{/order/{orderId}/add-dish(orderId=${order.id})}">
-    <select name="dishId">
-        <option th:each="dish : ${dishes}" th:value="${dish.id}" th:text="${dish.name}"></option>
-    </select>
-    <input type="number" name="quantity" min="1" value="1">
-    <input type="hidden" name="orderId" th:value="${order.id}">
-    <button type="submit">Add to Order</button>
-</form>
+<div class="container">
+    <h3>Add Dish to Order:</h3>
+    <form method="post" th:action="@{/order/{orderId}/add-dish(orderId=${order.id})}" class="container-form">
+        <select name="dishId" class="form-select form-select-sm">
+            <option th:each="dish : ${dishes}" th:value="${dish.id}" th:text="${dish.name}"></option>
+        </select>
+        <input type="number" name="quantity" min="0" value="1" class="form-control"
+               style="width: 40%">
+        <input type="hidden" name="orderId" th:value="${order.id}">
+        <button type="submit" class="btn btn-outline-primary">Add to Order</button>
+    </form>
+</div>
+<div class="container-sm">
+    <div>
+    <form method="post" th:action="@{/order/{orderId}/cancel-order(orderId=${order.id})}" class="card form-group">
+        <button type="submit" class="btn btn-danger">Cancel order!</button>
+    </form>
+    </div>
 
-<form method="post" th:action="@{/order/{orderId}/cancel-order(orderId=${order.id})}">
-    <button type="submit" class="btn btn-danger">Cancel order!</button>
-</form>
-
+    <div th:if="${order.status.toString().toLowerCase() == 'completed'}">
+        <form method="post" th:action="@{/order/{orderId}/pay(orderId=${order.id})}" class="card form-group">
+            <button type="submit" class="btn btn-success">Pay Order</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

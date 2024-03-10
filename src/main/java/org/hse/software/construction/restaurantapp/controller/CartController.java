@@ -2,33 +2,32 @@ package org.hse.software.construction.restaurantapp.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hse.software.construction.restaurantapp.CookingService;
-import org.hse.software.construction.restaurantapp.model.Order;
+import org.hse.software.construction.restaurantapp.model.Cart;
+import org.hse.software.construction.restaurantapp.service.impl.CookingServiceImpl;
 import org.hse.software.construction.restaurantapp.model.Dish;
-import org.hse.software.construction.restaurantapp.service.OrderHandler;
+import org.hse.software.construction.restaurantapp.service.impl.order.BucketHandler;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.BucketService;
+import org.hse.software.construction.restaurantapp.service.CartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
 @Controller
 @RequestMapping("/design")
 @AllArgsConstructor
-public class PreOrderController {
+public class CartController {
     private final DishService dishService;
-    private final BucketService bucketService;
-    private final OrderHandler orderHandler;
-    private final CookingService cookingService;
+    private final CartService cartService;
+    private final BucketHandler bucketHandler;
+    private final CookingServiceImpl cookingService;
 
     @ModelAttribute(name = "order")
-    public Order order() {
-        return new Order();
+    public Cart order() {
+        return new Cart();
     }
 
     @ModelAttribute(name = "dish")
@@ -47,25 +46,27 @@ public class PreOrderController {
     }
 
     @PostMapping
-    public ModelAndView processPreOrder(@ModelAttribute Order order, Errors errors) {
-        log.info("[processPreOrder]" + order);
+    public ModelAndView processCart(@ModelAttribute(name = "order") Cart cart, Errors errors) {
+        log.info("[processPreOrder]" + cart);
         if (errors.hasErrors()) {
+            log.info("[processPreOrder] ERRORR" + cart);
             return showDesignForm("Your order was not accepted");
         }
-        double totalCost = orderHandler.checkOrder(order.getSelectedDishes());
+        double totalCost = bucketHandler.checkOrder(cart.getSelectedDishes());
         if (totalCost == 0.0) {
+            log.info("[processPreOrder] ERRORR total cost " + cart);
             return showDesignForm("Your order was not accepted");
         }
-        order.setCost(totalCost);
-        log.info("[processPreOrder] 2" + order);
-        Order savedOrder = bucketService.saveOrder(order);
-        cookingService.processOrder(order);
-        return new ModelAndView("redirect:/order/details/" + savedOrder.getId());
+        cart.setCost(totalCost);
+        log.info("[processPreOrder] 2" + cart);
+        Cart savedCart = cartService.saveBucket(cart);
+        cookingService.processOrder(cart);
+        return new ModelAndView("redirect:/order/details/" + savedCart.getId());
     }
 
     @PostMapping("/save-order")
-    public ModelAndView saveOrder(@ModelAttribute("order") Order order) {
-        bucketService.saveOrder(order);
+    public ModelAndView saveOrder(@ModelAttribute("order") Cart cart) {
+        cartService.saveBucket(cart);
         return new ModelAndView("redirect:/menu");
     }
 }

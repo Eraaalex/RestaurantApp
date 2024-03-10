@@ -1,12 +1,15 @@
-package org.hse.software.construction.restaurantapp;
+package org.hse.software.construction.restaurantapp.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hse.software.construction.restaurantapp.model.Order;
+import org.hse.software.construction.restaurantapp.OrderCompletedEvent;
+import org.hse.software.construction.restaurantapp.model.Cart;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Status;
+import org.hse.software.construction.restaurantapp.service.CookingService;
 import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.BucketService;
+import org.hse.software.construction.restaurantapp.service.CartService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -16,19 +19,21 @@ import java.util.concurrent.*;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class CookingService {
+public class CookingServiceImpl implements CookingService {
     private DishService dishService;
-    private BucketService bucketService;
+    private CartService cartService;
     private final ExecutorService cookExecutor = Executors.newFixedThreadPool(3);
 
     private final Map<UUID, List<Future<?>>> cookingTasks = new ConcurrentHashMap<>();
 
-    public void processOrder(Order order) {
-        order.setStatus(Status.IN_PROGRESS);
-        bucketService.updateOrder(order);
+    private ApplicationEventPublisher eventPublisher;
+
+    public void processOrder(Cart cart) {
+        cart.setStatus(Status.IN_PROGRESS);
+        cartService.updateBucket(cart);
         List<Future<?>> tasks = new ArrayList<>();
 
-        order.getSelectedDishes().forEach((dishId, amount) -> {
+        cart.getSelectedDishes().forEach((dishId, amount) -> {
             for (int i = 0; i < amount; i++) {
                 Dish dish = dishService.findById(dishId);
                 Future<?> future = cookExecutor.submit(() -> {
@@ -38,17 +43,17 @@ public class CookingService {
             }
         });
 
-        cookingTasks.put(order.getId(), tasks);
-        checkOrderCompletion(order);
+        cookingTasks.put(cart.getId(), tasks);
+        checkOrderCompletion(cart);
     }
 
     public void addDishToOrder(UUID orderId, UUID dishId, int quantity) {
 
-        Order order = bucketService.findById(orderId);
+        Cart cart = cartService.findById(orderId);
         Dish dish = dishService.findById(dishId);
         log.info("[ADD] in Order " + orderId + "dish:" + dish.getName() + quantity + " to cook!");
-        order.addDish(dishId, quantity, dish.getPrice());
-        bucketService.updateOrder(order);
+        cart.addDish(dishId, quantity, dish.getPrice());
+        cartService.updateBucket(cart);
 
         List<Future<?>> tasks = cookingTasks.getOrDefault(orderId, new ArrayList<>());
 
@@ -66,10 +71,10 @@ public class CookingService {
         }
 
 
-        checkOrderCompletion(order);
+        checkOrderCompletion(cart);
     }
 
-    private void cookDish(Dish dish) {
+    public void cookDish(Dish dish) {
         try {
             TimeUnit.SECONDS.sleep(dish.getTime());
         } catch (InterruptedException e) {
@@ -78,9 +83,9 @@ public class CookingService {
     }
 
 
-    private void checkOrderCompletion(Order order) {
+    private void checkOrderCompletion(Cart cart) {
         cookExecutor.submit(() -> {
-            List<Future<?>> tasks = cookingTasks.get(order.getId());
+            List<Future<?>> tasks = cookingTasks.get(cart.getId());
 
             boolean allDone = tasks.stream().allMatch(Future::isDone);
             while (!allDone) {
@@ -92,30 +97,31 @@ public class CookingService {
                     return;
                 }
             }
-            completeOrder(order);
-            cookingTasks.remove(order.getId());
+            completeOrder(cart);
+            cookingTasks.remove(cart.getId());
         });
     }
 
 
-    private void completeOrder(Order order) {
-        order.setStatus(Status.COMPLETED);
-        bucketService.updateOrder(order);
-        log.info("Order " + order.getId() + " completed!");
+    private void completeOrder(Cart cart) {
+        cart.setStatus(Status.COMPLETED);
+        cartService.updateBucket(cart);
+        log.info("Order " + cart.getId() + " completed!");
+
+        OrderCompletedEvent event = new OrderCompletedEvent(this, cart);
+        eventPublisher.publishEvent(event);
     }
     public synchronized void cancelOrder(UUID orderId) {
 
-        Order order = bucketService.findById(orderId);
-        order.setStatus(Status.CANCELED);
-        bucketService.updateOrder(order);
+        Cart cart = cartService.findById(orderId);
+        cart.setStatus(Status.CANCELED);
+        cartService.updateBucket(cart);
         log.info("UPDATED order " + orderId);
         List<Future<?>> tasks = cookingTasks.get(orderId);
         if (tasks != null) {
             tasks.forEach(future -> future.cancel(true));
         }
         cookingTasks.remove(orderId);
-        log.info("REMOED order " + orderId);
+        log.info("REMOVED order " + orderId);
     }
-
-
 }

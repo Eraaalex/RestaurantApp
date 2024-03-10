@@ -22,6 +22,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/admin-main" th:href="@{/users/admin/{adminId}(adminId=${#authentication.principal.id})}" sec:authorize="hasRole('ROLE_ADMIN')">Admin</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/statistics" th:href="@{/statistics}" sec:authorize="hasRole('ROLE_ADMIN')">Statistics</a>
+        </li>
 
       </ul>
       <form th:action="@{/logout}" method="post" class="form-inline my-2 my-lg-0">

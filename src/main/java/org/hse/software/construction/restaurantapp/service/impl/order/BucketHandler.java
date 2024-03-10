@@ -1,9 +1,10 @@
-package org.hse.software.construction.restaurantapp.service;
+package org.hse.software.construction.restaurantapp.service.impl.order;
 
 import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hse.software.construction.restaurantapp.model.Dish;
+import org.hse.software.construction.restaurantapp.service.DishService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class OrderHandler {
+public class BucketHandler {
 
     private final DishService dishService;
     @Transactional

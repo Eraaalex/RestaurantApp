@@ -3,7 +3,7 @@ package org.hse.software.construction.restaurantapp.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hse.software.construction.restaurantapp.model.Order;
+import org.hse.software.construction.restaurantapp.model.Cart;
 import org.hse.software.construction.restaurantapp.model.Dish;
 import org.hse.software.construction.restaurantapp.model.Human;
 import org.hse.software.construction.restaurantapp.service.DishService;
@@ -66,8 +66,8 @@ public class AppController {
 
 
     @ModelAttribute(name = "order")
-    public Order order() {
-        return new Order();
+    public Cart order() {
+        return new Cart();
     }
 
     @ModelAttribute(name = "dish")
