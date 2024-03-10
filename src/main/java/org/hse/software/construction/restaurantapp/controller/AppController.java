@@ -30,14 +30,14 @@ public class AppController {
     }
 
     @GetMapping("/error")
-    public ModelAndView showErrorForm(String message){
+    public ModelAndView showErrorForm(String message) {
         ModelAndView model = new ModelAndView("error");
         model.addObject("message", message);
         return model;
     }
 
     @GetMapping("/all-users")
-    public List<Human> getAllUsers(){
+    public List<Human> getAllUsers() {
         return service.findAllUsers();
     }
 
@@ -46,16 +46,15 @@ public class AppController {
         return dishService.findByName(name);
     }
 
-    @PutMapping("/update-dish")//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("/update-dish")
     public Dish updateDish(@RequestBody Dish dish) {
         return dishService.updateDish(dish);
     }
 
-    @DeleteMapping("/delete_dish/{name}")//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @DeleteMapping("/delete_dish/{name}")
     public void deleteDish(@PathVariable String name) {
-        dishService.deleteDish(name);
+        dishService.deleteDishByName(name);
     }
-
 
 
     @PostMapping("/new-user")

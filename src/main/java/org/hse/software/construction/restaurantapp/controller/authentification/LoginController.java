@@ -1,4 +1,4 @@
-package org.hse.software.construction.restaurantapp.controller;
+package org.hse.software.construction.restaurantapp.controller.authentification;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,25 +29,6 @@ public class LoginController {
         return "login";
     }
 
-
-//    @PostMapping("/signup")
-//    public String signup( Human human, BindingResult bindingResult, Model model) {
-//
-//        log.info("User registered: 1 " + human.getName());
-//        Human existing = userService.findByName(human.getName());
-//        log.info("User registered: 2 " + human.getName());
-//        if (existing != null) {
-//            log.info("User registered: Err null 3 " + human.getName());
-//            return "login";
-//        }
-//        if (bindingResult.hasErrors()) {
-//            throw new IllegalArgumentException("Invalid user data");
-//        }
-//
-//        userService.addUser(human, true);
-//        log.info("User registered: 4 " + human.getName());
-//        return "redirect:/login";
-//    }
     @PostMapping("/signup")
     public String signup(@ModelAttribute("human") Human human, BindingResult bindingResult, Model model) {
         log.info("User registered: 1 " + human.getName());
@@ -60,7 +41,7 @@ public class LoginController {
             throw new IllegalArgumentException("Invalid user data");
         }
 
-        userService.addUser(human, true);
+        userService.addUser(human, false);
         log.info("User registered: " + human.getName());
         return "redirect:/login";
     }

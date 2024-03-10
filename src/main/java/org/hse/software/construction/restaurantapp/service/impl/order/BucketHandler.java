@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 @AllArgsConstructor
 public class BucketHandler {
-
     private final DishService dishService;
+
     @Transactional
     public double checkOrder(Map<UUID, Integer> selectedDishes) {
         int maxRetries = 3;
@@ -43,7 +43,7 @@ public class BucketHandler {
         selectedDishes.forEach((dishId, quantity) -> {
             Dish dish = dishService.findById(dishId);
             int availability = dish.getAmount();
-            if (quantity <= availability){
+            if (quantity <= availability) {
                 totalCost.updateAndGet(v -> v + dish.getPrice() * quantity);
                 dish.setAmount(availability - quantity);
                 dishService.updateDish(dish);
@@ -73,7 +73,7 @@ public class BucketHandler {
         return false;
     }
 
-    private void attemptToAddDishesToOrder( UUID dishId, int quantity) {
+    private void attemptToAddDishesToOrder(UUID dishId, int quantity) {
         Dish dish = dishService.findById(dishId);
         if (quantity > dish.getAmount()) {
             log.info("Insufficient dish quantity available");
@@ -83,5 +83,6 @@ public class BucketHandler {
         dish.setAmount(dish.getAmount() - quantity);
         dishService.updateDish(dish);
     }
+
 
 }

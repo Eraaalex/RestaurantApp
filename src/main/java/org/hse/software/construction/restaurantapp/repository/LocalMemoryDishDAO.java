@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 @Repository
 public class LocalMemoryDishDAO {
-    
+
     private final List<Dish> dishes = new ArrayList<>();
 
 
@@ -37,7 +37,7 @@ public class LocalMemoryDishDAO {
         var dishIndex = IntStream.range(0, dishes.size())
                 .filter(index -> dishes.get(index).getName().equals(dish.getName()))
                 .findFirst().orElse(-1);
-        if (dishIndex > -1){
+        if (dishIndex > -1) {
             dishes.set(dishIndex, dish);
             return dish;
         }
@@ -48,7 +48,7 @@ public class LocalMemoryDishDAO {
 
     public void deleteDish(String name) {
         var dish = findByName(name);
-        if (dish != null){
+        if (dish != null) {
             dishes.remove(dish);
         }
     }

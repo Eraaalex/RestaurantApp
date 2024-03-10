@@ -27,11 +27,11 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers( "/login","/signup", "/new-user", "/error").permitAll()
-                        .requestMatchers("/","/order/**")
-                        .hasAnyAuthority("ROLE_ADMIN","ROLE_USER")
-                        .requestMatchers("/product/**").hasAnyAuthority("ROLE_ADMIN")
-                        .requestMatchers("/users/admin/**").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers("/login", "/signup", "/error").permitAll()
+                        .requestMatchers("/design", "/order/**")
+                        .hasAnyAuthority("ROLE_USER")
+                        .requestMatchers("/dishes/**", "/users/admin/**")
+                        .hasAnyAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -56,6 +56,7 @@ public class SecurityConfig {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(8);
     }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/css/**", "/js/**");

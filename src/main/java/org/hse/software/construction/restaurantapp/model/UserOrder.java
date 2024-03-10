@@ -1,13 +1,5 @@
 package org.hse.software.construction.restaurantapp.model;
 
-import jakarta.persistence.*;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.*;
-
 //public class UserOrder {
 //
 //    @Id

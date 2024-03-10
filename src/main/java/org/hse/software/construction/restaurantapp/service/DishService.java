@@ -12,10 +12,13 @@ public interface DishService {
     List<Dish> findAllDish();
 
     Dish saveDish(Dish dish);
+
     Dish findByName(String name);
 
-    Dish updateDish (Dish dish);
-    void deleteDish (String name);
+    Dish updateDish(Dish dish);
+
+    void deleteDishByName(String name);
+    void deleteDish(UUID id);
 
     Dish findById(UUID dishId);
 }

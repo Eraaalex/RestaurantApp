@@ -1,15 +1,16 @@
-package org.hse.software.construction.restaurantapp.controller;
+package org.hse.software.construction.restaurantapp.controller.order;
 
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hse.software.construction.restaurantapp.OrderCompletedEvent;
-import org.hse.software.construction.restaurantapp.service.impl.CookingServiceImpl;
-import org.hse.software.construction.restaurantapp.DishConverter;
 import org.hse.software.construction.restaurantapp.model.Cart;
-import org.hse.software.construction.restaurantapp.service.DishService;
-import org.hse.software.construction.restaurantapp.service.impl.order.BucketHandler;
 import org.hse.software.construction.restaurantapp.service.CartService;
+import org.hse.software.construction.restaurantapp.service.DishService;
+import org.hse.software.construction.restaurantapp.service.OrderService;
+import org.hse.software.construction.restaurantapp.service.impl.CookingServiceImpl;
+import org.hse.software.construction.restaurantapp.service.impl.order.BucketHandler;
+import org.hse.software.construction.restaurantapp.utility.DishConverter;
+import org.hse.software.construction.restaurantapp.utility.OrderCompletedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ public class OrderController {
     private DishConverter dishConverter;
     private BucketHandler bucketHandler;
     private final CookingServiceImpl cookingService;
+    private final OrderService orderService;
 
     @GetMapping("/details/{orderId}")
     public String showOrderForm(@PathVariable UUID orderId, Model model) {
@@ -36,7 +38,6 @@ public class OrderController {
         model.addAttribute("dishConverter", dishConverter);
         return "order-details";
     }
-
 
 
     @PostMapping("{orderId}/add-dish")
@@ -56,6 +57,7 @@ public class OrderController {
         model.addAttribute("orderId", orderId.toString());
         return "canceled-order";
     }
+
     @GetMapping("details/paid/{orderId}")
     public String showPaidOrder(@PathVariable UUID orderId, Model model) {
         model.addAttribute("orderId", orderId.toString());
@@ -73,17 +75,17 @@ public class OrderController {
     @PostMapping("/{orderId}/pay")
     public String processPayment(@PathVariable UUID orderId) {
         Cart cart = cartService.findById(orderId);
-
+        orderService.saveOrderFromCart(cart);
         return "redirect:/order/details/paid/" + orderId;
     }
 
 
     @EventListener
     public void onOrderCompleted(OrderCompletedEvent event) {
-        processPayment(event.getOrder());
+        processSavingOrder(event.getOrder());
     }
 
-    private void processPayment(Cart order){
-        log.error("[processPayment] notified" + order);
+    private void processSavingOrder(Cart cart) {
+        log.info("[process] notified that order Completed " + cart);
     }
 }

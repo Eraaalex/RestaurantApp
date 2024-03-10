@@ -1,7 +1,10 @@
 package org.hse.software.construction.restaurantapp.model;
 
 
-import jakarta.persistence.*;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +15,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -49,6 +50,7 @@ public class Cart {
             selectedDishes.remove(dishId);
         }
     }
+
     @Transient
     Status status = Status.ACCEPTED;
     @Transient
